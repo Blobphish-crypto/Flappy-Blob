@@ -25,8 +25,7 @@ obstacleImage.src = 'obstacle.png'; // Path to your obstacle image
 const collectibleImage = new Image();
 collectibleImage.src = 'collectible.png'; // Path to your collectible image
 
-const lifeIconImage = new Image();
-lifeIconImage.src = 'collectible.png'; // Path to your life icon image
+const lifeIconImage = blobImg();
 
 // Update blob object dimensions
 const blob = {
