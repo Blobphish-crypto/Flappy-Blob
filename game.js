@@ -2,7 +2,7 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 const blobImg = new Image();
-blobImg.src = 'blob.png'; // Path to your blob image
+blobImg.src = 'blob.jpg'; // Path to your blob image
 
 const backgroundImage = new Image();
 backgroundImage.src = 'background.png'; // Path to your background image
