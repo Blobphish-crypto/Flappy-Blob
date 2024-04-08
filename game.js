@@ -26,7 +26,7 @@ const collectibleImage = new Image();
 collectibleImage.src = 'collectible.png'; // Path to your collectible image
 
 const lifeIconImage = new Image();
-lifeIconImage.src = 'life.png'; // Path to your life icon image
+lifeIconImage.src = 'life_icon.png'; // Path to your life icon image
 
 // Update blob object dimensions
 const blob = {
@@ -77,14 +77,14 @@ document.addEventListener('keyup', function (e) {
     }
 });
 
-// Function to draw the background
-function drawBackground() {
-    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-}
-
-// Function to draw the blob
+// Function to draw blob
 function drawBlob() {
     ctx.drawImage(blobImg, blob.x, blob.y, blob.width, blob.height);
+}
+
+// Function to draw background
+function drawBackground() {
+    ctx.drawImage(backgroundImage, 0, 0, backgroundWidth, backgroundHeight);
 }
 
 // Function to draw obstacles
@@ -114,15 +114,17 @@ function drawTimer() {
     ctx.font = '20px Arial';
     ctx.textAlign = 'right';
     ctx.fillText(formatTime(elapsedTime), canvas.width - 10, 30);
+    
+    drawLifeCounter(); // Draw life counter
 }
 
 // Function to generate obstacles
 function generateObstacles() {
-    if (obstacle.obstacles.length === 0 || obstacle.obstacles[obstacle.obstacles.length - 
- const minHeight = obstacle.minHeight * scale;
-        const maxHeight = canvas.height - obstacle.minHeight - obstacle.gap;
+    if (obstacle.obstacles.length === 0 || obstacle.obstacles[obstacle.obstacles.length - 1].x <= canvas.width - obstacle.spacing) {
+        const minHeight = obstacle.minHeight * scale;
+        const maxHeight = canvas.height - obstacle.minHeight - obstacle.gap * scale;
         const height = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
-        const y = Math.floor(Math.random() * (obstacle.maxY - obstacle.minY + 1)) + obstacle.minY;
+        const y = Math.floor(Math.random() * (obstacle.maxY - obstacle.minY + 1)) + obstacle.minY * scale;
 
         obstacle.obstacles.push({
             x: canvas.width,
@@ -133,7 +135,7 @@ function generateObstacles() {
         obstacle.obstacles.push({
             x: canvas.width,
             y: y,
-            height: canvas.height - (height + obstacle.gap)
+            height: canvas.height - (height + obstacle.gap * scale)
         });
     }
 }
@@ -216,7 +218,6 @@ function update() {
     drawBlob();
     drawCollectible();
     drawTimer();
-    drawLifeCounter();
 
     generateObstacles();
     updateObstacles();
@@ -246,4 +247,5 @@ function formatTime(seconds) {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
 }
 
+// Initial call to update function
 update();
