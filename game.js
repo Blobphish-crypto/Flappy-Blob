@@ -1,11 +1,23 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// Set canvas size to match screen resolution
+canvas.width = 1920;
+canvas.height = 1080;
+
+// Define scale factors for drawing elements
+const scale = Math.min(canvas.width / 1920, canvas.height / 1080);
+
+// Load images and set their scaled dimensions
 const blobImg = new Image();
 blobImg.src = 'blob.jpg'; // Path to your blob image
+const blobWidth = 34 * scale;
+const blobHeight = 24 * scale;
 
 const backgroundImage = new Image();
 backgroundImage.src = 'background.png'; // Path to your background image
+const backgroundWidth = canvas.width;
+const backgroundHeight = canvas.height;
 
 const obstacleImage = new Image();
 obstacleImage.src = 'obstacle.png'; // Path to your obstacle image
@@ -16,32 +28,32 @@ collectibleImage.src = 'collectible.png'; // Path to your collectible image
 const lifeIconImage = new Image();
 lifeIconImage.src = 'life_icon.png'; // Path to your life icon image
 
-const backgroundSpeed = 1; // Adjust the speed of scrolling
-const obstacleSpeed = backgroundSpeed; // Obstacles scroll at the same speed as the background
-
+// Update blob object dimensions
 const blob = {
-    x: 50,
+    x: 50 * scale,
     y: canvas.height / 2,
-    width: 34, // Adjust according to your blob image
-    height: 24, // Adjust according to your blob image
+    width: blobWidth,
+    height: blobHeight,
     velocity: 0,
-    gravity: 0.5,
-    jump: -10
+    gravity: 0.5 * scale,
+    jump: -10 * scale
 };
 
+// Obstacle settings
 const obstacle = {
-    width: 50, // Adjust obstacle width
-    minHeight: 50, // Minimum height for obstacles
-    gap: 150, // Gap size for player to pass through
-    spacing: 300, // Spacing between obstacles
-    minY: 50, // Minimum Y position of top obstacle
-    maxY: canvas.height - 150, // Maximum Y position of top obstacle
+    width: 50 * scale, // Adjust obstacle width
+    minHeight: 50 * scale, // Minimum height for obstacles
+    gap: 150 * scale, // Gap size for player to pass through
+    spacing: 300 * scale, // Spacing between obstacles
+    minY: 50 * scale, // Minimum Y position of top obstacle
+    maxY: canvas.height - 150 * scale, // Maximum Y position of top obstacle
     obstacles: [] // Array to hold generated obstacles
 };
 
+// Collectible settings
 const collectible = {
-    width: 30, // Adjust collectible width
-    height: 30, // Adjust collectible height
+    width: 30 * scale, // Adjust collectible width
+    height: 30 * scale, // Adjust collectible height
     minSpawnTime: 120, // Minimum time between collectible spawns (in seconds)
     maxSpawnTime: 240, // Maximum time between collectible spawns (in seconds)
     spawnTime: 0, // Time until next collectible spawn
@@ -64,12 +76,13 @@ document.addEventListener('keyup', function (e) {
         spacePressed = false; // Set spacePressed to false when Spacebar is released
     }
 });
+
 function drawBlob() {
-    ctx.drawImage(blobImg, blob.x, blob.y, blob.width, blob.height);
+    ctx.drawImage(blobImg, blob.x, blob.y, blobWidth, blobHeight);
 }
 
 function drawBackground() {
-    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(backgroundImage, 0, 0, backgroundWidth, backgroundHeight);
 }
 
 function drawObstacles() {
@@ -95,7 +108,7 @@ function drawTimer() {
     ctx.font = '20px Arial';
     ctx.textAlign = 'right';
     ctx.fillText(formatTime(elapsedTime), canvas.width - 10, 30);
-    
+
     drawLifeCounter(); // Draw life counter
 }
 
@@ -105,7 +118,7 @@ function generateObstacles() {
         const maxHeight = canvas.height - obstacle.minHeight - obstacle.gap;
         const height = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
         const y = Math.floor(Math.random() * (obstacle.maxY - obstacle.minY + 1)) + obstacle.minY;
-
+        
         obstacle.obstacles.push({
             x: canvas.width,
             y: 0,
