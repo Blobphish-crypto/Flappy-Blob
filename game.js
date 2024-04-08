@@ -152,6 +152,8 @@ function updateObstacles() {
     }
 }
 
+const backgroundSpeed = 1; // Adjust the speed of scrolling
+
 // Function to generate collectibles
 function generateCollectible() {
     const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
