@@ -10,23 +10,23 @@ const scale = Math.min(canvas.width / 1920, canvas.height / 1080);
 
 // Load images and set their scaled dimensions
 const blobImg = new Image();
-blobImg.src = 'blob.jpg'; // Path to your blob image
+blobImg.src = blob.jpg; // Path to your blob image
 const blobWidth = 34 * scale;
 const blobHeight = 24 * scale;
 
 const backgroundImage = new Image();
-backgroundImage.src = 'background.png'; // Path to your background image
+backgroundImage.src = background.png; // Path to your background image
 const backgroundWidth = canvas.width;
 const backgroundHeight = canvas.height;
 
 const obstacleImage = new Image();
-obstacleImage.src = 'obstacle.png'; // Path to your obstacle image
+obstacleImage.src = obstacle.png; // Path to your obstacle image
 
 const collectibleImage = new Image();
-collectibleImage.src = 'collectible.png'; // Path to your collectible image
+collectibleImage.src = collectible.png; // Path to your collectible image
 
 const lifeIconImage = new Image();
-lifeIconImage.src = 'life_icon.png'; // Path to your life icon image
+lifeIconImage.src = life_icon.png; // Path to your life icon image
 
 // Update blob object dimensions
 const blob = {
@@ -48,6 +48,16 @@ const obstacle = {
     minY: 50 * scale, // Minimum Y position of top obstacle
     maxY: canvas.height - 150 * scale, // Maximum Y position of top obstacle
     obstacles: [] // Array to hold generated obstacles
+};
+
+// Collectible settings
+const collectible = {
+    width: 30 * scale, // Adjust collectible width
+    height: 30 * scale, // Adjust collectible height
+    minSpawnTime: 120, // Minimum time between collectible spawns (in seconds)
+    maxSpawnTime: 240, // Maximum time between collectible spawns (in seconds)
+    spawnTime: 0, // Time until next collectible spawn
+    lives: 3 // Initial number of lives
 };
 
 // Collectible settings
