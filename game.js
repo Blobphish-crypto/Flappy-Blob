@@ -26,7 +26,7 @@ const collectibleImage = new Image();
 collectibleImage.src = 'collectible.png'; // Path to your collectible image
 
 const lifeIconImage = new Image();
-lifeIconImage.src = 'life_icon.png'; // Path to your life icon image
+lifeIconImage.src = 'life.png'; // Path to your life icon image
 
 // Update blob object dimensions
 const blob = {
