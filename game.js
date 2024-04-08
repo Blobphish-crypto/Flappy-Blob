@@ -60,6 +60,23 @@ const collectible = {
     lives: 3 // Initial number of lives
 };
 
+let lastSpawnTime = 0; // Variable to store the last spawn time
+let spacePressed = false; // Variable to track if Spacebar is pressed
+let startTime = Date.now(); // Variable to store the start time of the game
+let elapsedTime = 0; // Variable to store the elapsed time
+
+document.addEventListener('keydown', function (e) {
+    if (e.code === 'Space') {
+        spacePressed = true; // Set spacePressed to true when Spacebar is pressed
+    }
+});
+
+document.addEventListener('keyup', function (e) {
+    if (e.code === 'Space') {
+        spacePressed = false; // Set spacePressed to false when Spacebar is released
+    }
+});
+
 // Function to draw the background
 function drawBackground() {
     ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
@@ -91,16 +108,142 @@ function drawLifeCounter() {
     ctx.fillText(`x${collectible.lives}`, 50, 35); // Draw life tally
 }
 
-// Function to update the game state
+// Function to draw timer
+function drawTimer() {
+    ctx.fillStyle = '#000';
+    ctx.font = '20px Arial';
+    ctx.textAlign = 'right';
+    ctx.fillText(formatTime(elapsedTime), canvas.width - 10, 30);
+}
+
+// Function to generate obstacles
+function generateObstacles() {
+    if (obstacle.obstacles.length === 0 || obstacle.obstacles[obstacle.obstacles.length - 
+ const minHeight = obstacle.minHeight;
+        const maxHeight = canvas.height - obstacle.minHeight - obstacle.gap;
+        const height = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
+        const y = Math.floor(Math.random() * (obstacle.maxY - obstacle.minY + 1)) + obstacle.minY;
+
+        obstacle.obstacles.push({
+            x: canvas.width,
+            y: 0,
+            height: height
+        });
+
+        obstacle.obstacles.push({
+            x: canvas.width,
+            y: y,
+            height: canvas.height - (height + obstacle.gap)
+        });
+    }
+}
+
+// Function to update obstacles
+function updateObstacles() {
+    obstacle.obstacles.forEach(obs => {
+        obs.x -= backgroundSpeed;
+    });
+
+    if (obstacle.obstacles.length > 0 && obstacle.obstacles[0].x + obstacle.width < 0) {
+        obstacle.obstacles.shift();
+        obstacle.obstacles.shift();
+    }
+}
+
+// Function to generate collectibles
+function generateCollectible() {
+    const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+    if (currentTime - lastSpawnTime >= collectible.spawnTime) {
+        // Spawn a collectible
+        collectible.spawnTime = Math.floor(Math.random() * (collectible.maxSpawnTime - collectible.minSpawnTime + 1)) + collectible.minSpawnTime;
+        lastSpawnTime = currentTime;
+    }
+}
+
+// Function to update collectibles
+function updateCollectible() {
+    generateCollectible();
+}
+
+// Function to check collisions
+function checkCollisions() {
+    obstacle.obstacles.forEach(obs => {
+        if (
+            blob.x < obs.x + obstacle.width &&
+            blob.x + blob.width > obs.x &&
+            (blob.y < obs.y + obs.height || blob.y + blob.height > obs.y + obs.height + obstacle.gap)
+        ) {
+            // Collision with obstacle
+            collectible.lives--;
+            if (collectible.lives <= 0) {
+                // Game over
+                gameOver();
+            } else {
+                // Reset blob position
+                blob.y = canvas.height / 2;
+                blob.velocity = 0;
+            }
+        }
+    });
+
+    const blobCenterX = blob.x + blob.width / 2;
+    const blobCenterY = blob.y + blob.height / 2;
+
+    const collectibleCenterX = canvas.width / 2;
+    const collectibleCenterY = canvas.height / 2;
+
+    const distance = Math.sqrt((blobCenterX - collectibleCenterX) ** 2 + (blobCenterY - collectibleCenterY) ** 2);
+    if (distance < blob.width / 2 + collectible.width / 2) {
+        // Collected the collectible
+        collectible.lives++;
+        lastSpawnTime = Math.floor(Date.now() / 1000); // Reset last spawn time
+        collectible.spawnTime = Math.floor(Math.random() * (collectible.maxSpawnTime - collectible.minSpawnTime + 1)) + collectible.minSpawnTime;
+    }
+}
+
+// Function to handle game over
+function gameOver() {
+    // Implement game over logic
+    console.log('Game Over');
+}
+
+// Function to update game elements
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     drawBackground();
     drawObstacles();
     drawBlob();
     drawCollectible();
+    drawTimer();
     drawLifeCounter();
+
+    generateObstacles();
+    updateObstacles();
+    updateCollectible();
+    checkCollisions();
+
+    if (spacePressed && blob.y > 0) {
+        // Ascend while Spacebar is pressed and blob is not at the top of the canvas
+        blob.velocity = blob.jump;
+    } else {
+        // Apply gravity to bring the blob back down
+        blob.velocity += blob.gravity;
+    }
+
+    blob.y += blob.velocity;
+
+    // Calculate elapsed time
+    elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+
     requestAnimationFrame(update);
 }
 
-// Start the game loop
+// Function to format time
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+}
+
 update();
