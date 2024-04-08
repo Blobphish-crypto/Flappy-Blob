@@ -119,7 +119,7 @@ function drawTimer() {
 // Function to generate obstacles
 function generateObstacles() {
     if (obstacle.obstacles.length === 0 || obstacle.obstacles[obstacle.obstacles.length - 
- const minHeight = obstacle.minHeight;
+ const minHeight = obstacle.minHeight * scale;
         const maxHeight = canvas.height - obstacle.minHeight - obstacle.gap;
         const height = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
         const y = Math.floor(Math.random() * (obstacle.maxY - obstacle.minY + 1)) + obstacle.minY;
