@@ -13,6 +13,9 @@ obstacleImage.src = 'obstacle.png'; // Path to your obstacle image
 const collectibleImage = new Image();
 collectibleImage.src = 'collectible.png'; // Path to your collectible image
 
+const lifeIconImage = new Image();
+lifeIconImage.src = 'life_icon.png'; // Path to your life icon image
+
 const backgroundSpeed = 1; // Adjust the speed of scrolling
 const obstacleSpeed = backgroundSpeed; // Obstacles scroll at the same speed as the background
 
@@ -47,7 +50,6 @@ const collectible = {
 
 let lastSpawnTime = 0; // Variable to store the last spawn time
 let spacePressed = false; // Variable to track if Spacebar is pressed
-
 let startTime = Date.now(); // Variable to store the start time of the game
 let elapsedTime = 0; // Variable to store the elapsed time
 
@@ -62,7 +64,6 @@ document.addEventListener('keyup', function (e) {
         spacePressed = false; // Set spacePressed to false when Spacebar is released
     }
 });
-
 function drawBlob() {
     ctx.drawImage(blobImg, blob.x, blob.y, blob.width, blob.height);
 }
@@ -82,11 +83,20 @@ function drawCollectible() {
     ctx.drawImage(collectibleImage, canvas.width / 2 - collectible.width / 2, canvas.height / 2 - collectible.height / 2, collectible.width, collectible.height);
 }
 
+function drawLifeCounter() {
+    ctx.drawImage(lifeIconImage, 10, 10, 30, 30); // Draw life icon
+    ctx.fillStyle = '#000';
+    ctx.font = '20px Arial';
+    ctx.fillText(`x${collectible.lives}`, 50, 35); // Draw life tally
+}
+
 function drawTimer() {
     ctx.fillStyle = '#000';
     ctx.font = '20px Arial';
     ctx.textAlign = 'right';
     ctx.fillText(formatTime(elapsedTime), canvas.width - 10, 30);
+    
+    drawLifeCounter(); // Draw life counter
 }
 
 function generateObstacles() {
@@ -148,7 +158,7 @@ function checkCollisions() {
                 gameOver();
             } else {
                 // Reset blob position
-blob.y = canvas.height / 2;
+                blob.y = canvas.height / 2;
                 blob.velocity = 0;
             }
         }
