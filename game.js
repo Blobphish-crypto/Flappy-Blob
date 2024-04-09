@@ -171,8 +171,6 @@ function updateCollectible() {
 
 // Function to check collisions
 function checkCollisions() {
-    let collided = false; // Flag to track if collision occurred
-    
     obstacle.obstacles.forEach(obs => {
         if (
             blob.x < obs.x + obstacle.width &&
@@ -180,33 +178,37 @@ function checkCollisions() {
             (blob.y < obs.y + obs.height || blob.y + blob.height > obs.y + obs.height + obstacle.gap)
         ) {
             // Collision with obstacle
-            collided = true; // Set collision flag
+            collectible.lives--;
+            if (collectible.lives <= 0) {
+                // Game over
+                gameOver();
+            } else {
+                // Reset blob position
+                blob.y = canvas.height / 2;
+                blob.velocity = 0;
+            }
         }
     });
-    
-    if (collided) {
-        // Collision detected
-        handleCollision();
+
+    const blobCenterX = blob.x + blob.width / 2;
+    const blobCenterY = blob.y + blob.height / 2;
+
+    const collectibleCenterX = canvas.width / 2;
+    const collectibleCenterY = canvas.height / 2;
+
+    const distance = Math.sqrt((blobCenterX - collectibleCenterX) ** 2 + (blobCenterY - collectibleCenterY) ** 2);
+    if (distance < blob.width / 2 + collectible.width / 2) {
+        // Collected the collectible
+        collectible.lives++;
+        lastSpawnTime = Math.floor(Date.now() / 1000); // Reset last spawn time
+        collectible.spawnTime = Math.floor(Math.random() * (collectible.maxSpawnTime - collectible.minSpawnTime + 1)) + collectible.minSpawnTime;
     }
 }
 
-// Function to handle collision
-function handleCollision() {
-    // Reset game state
-    resetGame();
-}
-
-// Function to reset game state
-function resetGame() {
-    // Reset blob position
-    blob.y = canvas.height / 2;
-    blob.velocity = 0;
-    
-    // Reset obstacle positions
-    obstacle.obstacles = [];
-    
-    // Regenerate obstacles
-    generateObstacles();
+// Function to handle game over
+function gameOver() {
+    // Implement game over logic
+    console.log('Game Over');
 }
 
 // Function to update game elements
@@ -218,6 +220,10 @@ function update() {
     drawBlob();
     drawCollectible();
     drawTimer();
+
+    generateObstacles();
+    updateObstacles();
+    updateCollectible();
     checkCollisions();
 
     if (spacePressed && blob.y > 0) {
