@@ -184,8 +184,7 @@ function checkCollisions() {
                 gameOver();
             } else {
                 // Reset blob position
-                blob.y = canvas.height / 2;
-                blob.velocity = 0;
+                resetGame();
             }
         }
     });
@@ -209,6 +208,13 @@ function checkCollisions() {
 function gameOver() {
     // Implement game over logic
     console.log('Game Over');
+}
+
+// Function to reset game
+function resetGame() {
+    blob.y = canvas.height / 2; // Reset blob position
+    obstacle.obstacles = []; // Reset obstacle positions
+    collectible.spawnTime = 0; // Reset collectible spawn time
 }
 
 // Function to update game elements
