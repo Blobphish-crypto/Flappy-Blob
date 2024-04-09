@@ -225,7 +225,7 @@ function update() {
     drawBlob();
     drawCollectible();
     drawTimer();
-    
+
     generateObstacles();
     updateObstacles();
     updateCollectible();
@@ -240,15 +240,6 @@ function update() {
     }
 
     blob.y += blob.velocity;
-
-    // Ensure blob stays within canvas boundaries
-    if (blob.y < 0) {
-        blob.y = 0;
-        blob.velocity = 0;
-    } else if (blob.y + blob.height > canvas.height) {
-        blob.y = canvas.height - blob.height;
-        blob.velocity = 0;
-    }
 
     // Calculate elapsed time
     elapsedTime = Math.floor((Date.now() - startTime) / 1000);
