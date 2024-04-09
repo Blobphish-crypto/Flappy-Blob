@@ -210,6 +210,12 @@ function gameOver() {
     console.log('Game Over');
 }
 
+// Function to reset blob position
+function resetBlob() {
+    blob.x = 50 * scale;
+    blob.y = canvas.height / 2;
+}
+
 // Function to update game elements
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
