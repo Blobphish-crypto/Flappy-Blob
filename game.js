@@ -179,6 +179,9 @@ function checkCollisions() {
         ) {
             // Collision with obstacle
             collectible.lives--;
+             if (collectible.lives > 1) {
+                collectible.lives--; // Decrease lives by 1 only if it's greater than 1
+            }
             if (collectible.lives <= 0) {
                 // Game over
                 gameOver();
