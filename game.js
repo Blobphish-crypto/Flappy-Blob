@@ -178,9 +178,12 @@ function checkCollisions() {
             (blob.y < obs.y + obs.height || blob.y + blob.height > obs.y + obs.height + obstacle.gap)
         ) {
             // Collision with obstacle
+            console.log('Collision detected!');
+            console.log('Before collision:', collectible.lives);
              if (collectible.lives > 0) {
                 collectible.lives--; // Decrease lives by 1 only if it's greater than 1
             }
+            console.log('After collision:', collectible.lives);
             if (collectible.lives <= 0) {
                 // Game over
                 gameOver();
