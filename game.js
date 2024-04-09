@@ -182,4 +182,66 @@ function checkCollisions() {
             // Collision with obstacle
             collided = true; // Set collision flag
         }
-   
+    });
+    
+    if (collided) {
+        // Collision detected
+        handleCollision();
+    }
+}
+
+// Function to handle collision
+function handleCollision() {
+    // Reset game state
+    resetGame();
+}
+
+// Function to reset game state
+function resetGame() {
+    // Reset blob position
+    blob.y = canvas.height / 2;
+    blob.velocity = 0;
+    
+    // Reset obstacle positions
+    obstacle.obstacles = [];
+    
+    // Regenerate obstacles
+    generateObstacles();
+}
+
+// Function to update game elements
+function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawBackground();
+    drawObstacles();
+    drawBlob();
+    drawCollectible();
+    drawTimer();
+    checkCollisions();
+
+    if (spacePressed && blob.y > 0) {
+        // Ascend while Spacebar is pressed and blob is not at the top of the canvas
+        blob.velocity = blob.jump;
+    } else {
+        // Apply gravity to bring the blob back down
+        blob.velocity += blob.gravity;
+    }
+
+    blob.y += blob.velocity;
+
+    // Calculate elapsed time
+    elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+
+    requestAnimationFrame(update);
+}
+
+// Function to format time
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+}
+
+// Initial call to update function
+update();
