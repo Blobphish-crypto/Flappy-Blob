@@ -232,6 +232,18 @@ function update() {
     updateCollectible();
     checkCollisions();
 
+     // Prevent blob from falling below the bottom edge
+    if (blob.y + blob.height > canvas.height) {
+        blob.y = canvas.height - blob.height;
+        blob.velocity = 0;
+    }
+
+    // Prevent blob from moving above the top edge
+    if (blob.y < 0) {
+        blob.y = 0;
+        blob.velocity = 0;
+    }
+
     if (spacePressed && blob.y > 0) {
         // Ascend while Spacebar is pressed and blob is not at the top of the canvas
         blob.velocity = blob.jump;
