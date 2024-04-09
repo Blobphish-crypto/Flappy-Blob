@@ -220,7 +220,36 @@ function update() {
     drawBlob();
     drawCollectible();
     drawTimer();
+function checkCollision() {
+    obstacle.obstacles.forEach(obs => {
+        // Check if the blob collides with any obstacle
+        if (
+            blob.x < obs.x + obstacle.width &&
+            blob.x + blob.width > obs.x &&
+            (blob.y < obs.y + obs.height || blob.y + blob.height > obs.y + obs.height + obstacle.gap)
+        ) {
+            // Collision detected
+            handleCollision();
+        }
+    });
+}
 
+function handleCollision() {
+    // Reset game state
+    resetGame();
+}
+
+function resetGame() {
+    // Reset blob position
+    blob.x = 50 * scale;
+    blob.y = canvas.height / 2;
+    
+    // Reset obstacle positions
+    obstacle.obstacles = [];
+    
+    // Reset collectible position
+    collectible.spawnTime = 0;
+}
     generateObstacles();
     updateObstacles();
     updateCollectible();
