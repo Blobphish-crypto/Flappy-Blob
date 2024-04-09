@@ -169,30 +169,38 @@ function updateCollectible() {
     generateCollectible();
 }
 
+// Define a flag to track collision status
+let isColliding = false;
+
 // Function to check collisions
 function checkCollisions() {
-    obstacle.obstacles.forEach(obs => {
-        if (
-            blob.x < obs.x + obstacle.width &&
-            blob.x + blob.width > obs.x &&
-            (blob.y < obs.y + obs.height || blob.y + blob.height > obs.y + obs.height + obstacle.gap)
-        ) {
-            // Collision with obstacle
-            console.log('Collision detected!');
-            console.log('Before collision:', collectible.lives);
-             if (collectible.lives > 0) {
-                collectible.lives--; // Decrease lives by 1 only if it's greater than 1
+    if (!isColliding) {
+        obstacle.obstacles.forEach(obs => {
+            if (
+                blob.x < obs.x + obstacle.width &&
+                blob.x + blob.width > obs.x &&
+                (blob.y < obs.y + obs.height || blob.y + blob.height > obs.y + obs.height + obstacle.gap)
+            ) {
+                // Set collision flag to true
+                isColliding = true;
+                
+                // Collision with obstacle
+                console.log('Collision detected');
+                console.log('Before collision:', collectible.lives); // Debug statement to log lives before collision
+                if (collectible.lives > 0) {
+                    collectible.lives--; // Decrease lives by 1 only if it's greater than 1
+                }
+                console.log('After collision:', collectible.lives); // Debug statement to log lives after collision
+                if (collectible.lives <= 0) {
+                    // Game over
+                    gameOver();
+                } else {
+                    // Reset blob position
+                    resetGame();
+                }
             }
-            console.log('After collision:', collectible.lives);
-            if (collectible.lives <= 0) {
-                // Game over
-                gameOver();
-            } else {
-                // Reset blob position
-                resetGame();
-            }
-        }
-    });
+        });
+    }
 
     const blobCenterX = blob.x + blob.width / 2;
     const blobCenterY = blob.y + blob.height / 2;
@@ -209,19 +217,15 @@ function checkCollisions() {
     }
 }
 
-// Function to handle game over
-function gameOver() {
-    // Implement game over logic
-    console.log('Game Over');
-}
-
 // Function to reset game
 function resetGame() {
+    // Set collision flag to false
+    isColliding = false;
+
     blob.y = canvas.height / 2; // Reset blob position
     obstacle.obstacles = []; // Reset obstacle positions
     collectible.spawnTime = 0; // Reset collectible spawn time
 }
-
 // Function to update game elements
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
