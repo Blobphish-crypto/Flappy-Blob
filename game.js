@@ -152,7 +152,7 @@ function updateObstacles() {
     }
 }
 
-const backgroundSpeed = 2; // Adjust the speed of scrolling
+const backgroundSpeed = 1; // Adjust the speed of scrolling
 
 // Function to generate collectibles
 function generateCollectible() {
