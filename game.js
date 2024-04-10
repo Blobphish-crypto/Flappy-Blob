@@ -172,7 +172,7 @@ function updateCollectible() {
 // Define a flag to track collision status
 let isColliding = false;
 let lastCollisionTime = 0;
-const collisionBufferTime = 250; // Buffer time in milliseconds (0.25 seconds)
+const collisionBufferTime = 500; // Buffer time in milliseconds (0.25 seconds)
 
 // Function to check collisions
 function checkCollisions() {
