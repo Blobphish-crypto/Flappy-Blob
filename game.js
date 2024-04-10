@@ -178,7 +178,13 @@ const collisionBufferTime = 250; // Buffer time in milliseconds (0.25 seconds)
 function checkCollisions() {
     const currentTime = Date.now();
 
-    // Check if enough time has passed since the last collision
+    // Debug: Print last collision time
+    console.log('Last Collision Time:', lastCollisionTime);
+
+    // Debug: Print current time
+    console.log('Current Time:', currentTime);
+
+    //check if enough time has passed since last collision
     if (!isColliding || (currentTime - lastCollisionTime) >= collisionBufferTime) {
         obstacle.obstacles.forEach(obs => {
             if (
@@ -188,17 +194,26 @@ function checkCollisions() {
             ) {
                 // Set collision flag to true
                 isColliding = true;
-                
+
+                // Debug: Print collision detected message
+                console.log('Collision Detected');
+
                 // Collision with obstacle
                 if (collectible.lives > 0) {
                     collectible.lives--; // Decrease lives by 1 only if it's greater than 1
-                    resetGame(); // Reset the game if lives are still remaining
+                }
+                if (collectible.lives <= 0) {
+                    // Game over
+                    gameOver();
+                } else {
+                    // Reset blob position
+                    resetGame();
                 }
             }
         });
 
-        // Update the last collision time
-        lastCollisionTime = currentTime;
+        // Debug: Print collision check result
+        console.log('Collision Check Result:', !isColliding || (currentTime - lastCollisionTime) >= collisionBufferTime);
     }
 
     const blobCenterX = blob.x + blob.width / 2;
