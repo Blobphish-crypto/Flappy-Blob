@@ -152,7 +152,7 @@ function updateObstacles() {
     }
 }
 
-const backgroundSpeed = 1; // Adjust the speed of scrolling
+const backgroundSpeed = 2; // Adjust the speed of scrolling
 
 // Function to generate collectibles
 function generateCollectible() {
@@ -171,10 +171,15 @@ function updateCollectible() {
 
 // Define a flag to track collision status
 let isColliding = false;
+let lastCollisionTime = 0;
+const collisionBufferTime = 250; // Buffer time in milliseconds (0.25 seconds)
 
 // Function to check collisions
 function checkCollisions() {
-    if (!isColliding) {
+    const currentTime = Date.now();
+
+    //check if enough time has passed since last collision
+     if (!isColliding || (currentTime - lastCollisionTime) >= collisionBufferTime) {
         obstacle.obstacles.forEach(obs => {
             if (
                 blob.x < obs.x + obstacle.width &&
